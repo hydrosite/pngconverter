@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNG Converter</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #ff7e5f;
+            background: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .file-input-label:hover {
+            background-color: #f1f1f1;
+        }
+
+        .canvas-section {
+            margin-top: 20px;
+        }
+
+        canvas {
+            display: none;
+            max-width: 100%;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ff7e5f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #feb47b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PNG Converter</h1>
+        <label for="imageInput" class="file-input-label">Choose Image</label>
+        <input type="file" id="imageInput" accept="image/*">
+        <div class="canvas-section">
+            <canvas id="canvas"></canvas>
+            <a id="downloadBtn" class="btn" download="converted-image.png">Download PNG</a>
+        </div>
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const downloadBtn = document.getElementById('downloadBtn');
+        let image = new Image();
+
+        imageInput.addEventListener('change', () => {
+            const file = imageInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    image.src = e.target.result;
+                    image.onload = function() {
+                        canvas.width = image.width;
+                        canvas.height = image.height;
+                        ctx.drawImage(image, 0, 0);
+                        canvas.style.display = 'block';
+                        downloadBtn.style.display = 'inline-block';
+                        downloadBtn.href = canvas.toDataURL('image/png');
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
